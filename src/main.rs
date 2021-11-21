@@ -37,11 +37,12 @@ async fn main() -> Result<(), Error> {
     let request_url = format!("https://api.coincap.io/v2/assets?limit=10");
     let response = reqwest::get(&request_url).await?.json::<Data>().await?;
     let mut table = Table::new();
-    table.add_row(row!["Name", "Price"]);
+    table.add_row(row!["Rank", "Name", "Price"]);
 
     for i in response.data {
         let i: CoinData = i;
         table.add_row(row![
+            format!("#{}", i.rank),
             i.name,
             parse_to_usd(i.price_usd, i.change_percent_24_hr)
         ]);
